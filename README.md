@@ -1,39 +1,58 @@
-# LINE 連携お問い合わせフォーム
+# Salon Lumina LINE 連携登録フォーム
 
-LINE LIFF アプリを使用したお問い合わせフォームです。
+LINE LIFF アプリを使用した登録フォームです。LINE公式アカウントのリッチメニューから開く登録フォームです。
 
 ## 機能
 
 - LINE ログイン連携（LIFF）
-- お問い合わせフォーム（名前（漢字）、ナマエ（カタカナ）、電話番号、紹介者（任意））
-- データベースへの保存（SQLite + Prisma）
+- ユーザー登録フォーム（名前（漢字）、ナマエ（カタカナ）、電話番号、紹介者（任意））
+- データベースへの保存（MySQL + Prisma）
 - 登録完了後の LINE 自動メッセージ送信
+- Cloud Run への自動デプロイ
+
+## 技術スタック
+
+- Next.js 15
+- TypeScript
+- Prisma
+- MySQL
+- Tailwind CSS
+- LINE LIFF SDK
+- LINE Messaging API
+- Google Cloud Run
 
 ## セットアップ
 
-### 1. 環境変数の設定
+### 1. 依存関係のインストール
+
+```bash
+npm install
+```
+
+### 2. 環境変数の設定
 
 `.env.local` ファイルを作成し、以下を設定してください：
 
 ```env
 # Database
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="mysql://user:password@host:3306/database"
 
 # LINE Messaging API
 LINE_CHANNEL_ACCESS_TOKEN="your_channel_access_token_here"
-LINE_CHANNEL_SECRET="9239b0c9a368bbc48b4c6601201a00aa"
+LINE_CHANNEL_SECRET="your_channel_secret"
 
 # LIFF ID
-LIFF_ID="2008317301-ANXP8KZG"
+LIFF_ID="your_liff_id"
 ```
 
-### 2. データベースの初期化
+### 3. データベースの初期化
 
 ```bash
-npx prisma migrate dev --name init
+npx prisma db push
+npx prisma generate
 ```
 
-### 3. 開発サーバーの起動
+### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
@@ -57,26 +76,46 @@ npm run dev
 4. **Webhook URL** を設定（本番環境の URL）
 5. **Webhook の利用** を有効化
 
-## 使用技術
+## 環境変数
 
-- Next.js 15
-- TypeScript
-- Tailwind CSS
-- Prisma
-- SQLite
-- LINE LIFF SDK
+必要な環境変数：
+
+```env
+DATABASE_URL="mysql://user:password@host:3306/database"
+LINE_CHANNEL_ACCESS_TOKEN="your_channel_access_token"
+LINE_CHANNEL_SECRET="your_channel_secret"
+LIFF_ID="your_liff_id"
+```
+
+## Cloud Run へのデプロイ
+
+### 自動デプロイ（推奨）
+
+1. Cloud Buildトリガーを設定
+2. GitHubにプッシュすると自動的にビルド・デプロイされます
+
+### 手動デプロイ
+
+```bash
+gcloud builds submit --config cloudbuild.yaml .
+```
+
+### 環境変数の設定
+
+Cloud Runの環境変数は`cloudbuild.yaml`に定義されています。
 
 ## ファイル構成
 
 ```
 src/
 ├── app/
-│   ├── api/contact/route.ts    # お問い合わせAPI
+│   ├── api/contact/route.ts    # 登録API
 │   ├── layout.tsx
 │   └── page.tsx                # メインページ
 ├── components/
 │   └── ContactForm.tsx         # フォームコンポーネント
 ├── lib/
+│   ├── line-messaging.ts      # LINE Messaging API
 │   └── prisma.ts              # Prismaクライアント
 └── types/
     └── liff.d.ts              # LIFF型定義
@@ -86,4 +125,17 @@ public/
 
 prisma/
 └── schema.prisma              # データベーススキーマ
+
+cloudbuild.yaml                 # Cloud Build設定
+Dockerfile                      # コンテナイメージ設定
 ```
+
+## 使用技術
+
+- Next.js 15
+- TypeScript
+- Prisma
+- MySQL
+- Tailwind CSS
+- LINE LIFF SDK
+- Google Cloud Run
