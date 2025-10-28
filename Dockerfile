@@ -16,15 +16,20 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 環境変数を設定（ビルド用）
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL:-file:./dev.db}
+# デバッグ: ファイルがコピーされているか確認
+RUN ls -la prisma/ || echo "Prisma folder not found"
 
 # Prismaクライアントを生成
 RUN npx prisma generate
 
+# デバッグ: Prismaクライアントが生成されたか確認
+RUN ls -la node_modules/.prisma/client/ || echo "Prisma client not generated"
+
 # Next.jsをビルド
 RUN npm run build
+
+# デバッグ: ビルド結果を確認
+RUN ls -la .next/ || echo "Next build not found"
 
 # 本番ステージ
 FROM base AS runner
