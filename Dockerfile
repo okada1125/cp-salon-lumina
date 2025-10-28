@@ -16,6 +16,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# 環境変数を設定（ビルド用）
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL:-file:./dev.db}
+
 # Prismaクライアントを生成
 RUN npx prisma generate
 

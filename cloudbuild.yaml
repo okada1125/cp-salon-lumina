@@ -2,11 +2,16 @@ steps:
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
     args:
-      ["build", "-t", "gcr.io/$PROJECT_ID/line-contact-form:$COMMIT_SHA", "."]
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/line-salon-lumina-register:$COMMIT_SHA"
+      - "--build-arg"
+      - "DATABASE_URL=mysql://root:KvRPDbd>\m.L}701@35.221.114.163:3306/line_contact_form"
+      - "."
 
   # Push the container image to Container Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/$PROJECT_ID/line-contact-form:$COMMIT_SHA"]
+    args: ["push", "gcr.io/$PROJECT_ID/line-salon-lumina-register:$COMMIT_SHA"]
 
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -14,16 +19,16 @@ steps:
     args:
       - "run"
       - "deploy"
-      - "line-contact-form"
+      - "line-salon-lumina-register"
       - "--image"
-      - "gcr.io/$PROJECT_ID/line-contact-form:$COMMIT_SHA"
+      - "gcr.io/$PROJECT_ID/line-salon-lumina-register:$COMMIT_SHA"
       - "--region"
       - "asia-northeast1"
       - "--platform"
       - "managed"
       - "--allow-unauthenticated"
-      - "--set-env-vars"
-      - 'DATABASE_URL=mysql://root:KvRPDbd>\m.L}701@35.221.114.163:3306/line_contact_form,LINE_CHANNEL_SECRET=9239b0c9a368bbc48b4c6601201a00aa,LIFF_ID=2008317301-ANXP8KZG'
+      - "--update-env-vars"
+      - 'DATABASE_URL=mysql://root:KvRPDbd>\\m.L}701@35.221.114.163:3306/line_contact_form,LINE_CHANNEL_SECRET=9239b0c9a368bbc48b4c6601201a00aa,LIFF_ID=2008317301-ANXP8KZG,LINE_CHANNEL_ACCESS_TOKEN=9239b0c9a368bbc48b4c6601201a00aa'
 
 images:
-  - "gcr.io/$PROJECT_ID/line-contact-form:$COMMIT_SHA"
+  - "gcr.io/$PROJECT_ID/line-salon-lumina-register:$COMMIT_SHA"
