@@ -16,7 +16,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.jsをビルド（prismaクライアントはpostinstallで自動生成される）
+# Prismaクライアントを再生成（ビルドに必要）
+RUN npx prisma generate
+
+# Next.jsをビルド
 RUN npm run build
 
 # 本番ステージ
