@@ -6,7 +6,7 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# パッケージファイルをコピーして依存関係をインストール（全依存関係をインストール）
+# パッケージファイルをコピーして依存関係をインストール（全依存関係）
 COPY package*.json ./
 RUN npm ci
 
@@ -16,7 +16,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.jsをビルド（ビルドにはdevDependenciesも必要）
+# Prismaクライアントを生成
+RUN npx prisma generate
+
+# Next.jsをビルド
 RUN npm run build
 
 # 本番ステージ
