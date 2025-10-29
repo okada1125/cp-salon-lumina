@@ -31,7 +31,7 @@ steps:
       - "managed"
       - "--allow-unauthenticated"
       - "--update-env-vars"
-      - 'DATABASE_URL=mysql://root:KvRPDbd>\\m.L}701@35.221.114.163:3306/line_contact_form,LINE_CHANNEL_SECRET=9239b0c9a368bbc48b4c6601201a00aa,LIFF_ID=2008317301-ANXP8KZG,LINE_CHANNEL_ACCESS_TOKEN=9239b0c9a368bbc48b4c6601201a00aa'
+      - 'DATABASE_URL=mysql://root:KvRPDbd>\\m.L}701@35.221.114.163:3306/salon_lumina_register,LINE_CHANNEL_SECRET=9239b0c9a368bbc48b4c6601201a00aa,LIFF_ID=2008317301-ANXP8KZG,LINE_CHANNEL_ACCESS_TOKEN=9239b0c9a368bbc48b4c6601201a00aa'
 
 images:
   - "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:$COMMIT_SHA"
