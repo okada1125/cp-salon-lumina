@@ -18,11 +18,15 @@ export default function Home() {
   useEffect(() => {
     const initializeLiff = async () => {
       try {
-        // LIFFが初期化されているかチェック
-        if (
-          typeof window !== "undefined" &&
-          (window as { liff?: unknown }).liff
-        ) {
+        // LIFF SDKの読み込みを待つ
+        let liffCheckCount = 0;
+        while (!(window as { liff?: unknown }).liff && liffCheckCount < 50) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          liffCheckCount++;
+        }
+
+        // LIFFが利用可能かチェック
+        if ((window as { liff?: unknown }).liff) {
           const liff = (window as { liff: unknown }).liff as {
             init: (config: { liffId: string }) => Promise<void>;
             isLoggedIn: () => boolean;
@@ -31,20 +35,26 @@ export default function Home() {
           };
           setIsLiffAvailable(true);
 
+          console.log("LIFF SDKが見つかりました。初期化を開始します...");
+
           // LIFFを初期化
           await liff.init({ liffId: "2008317301-ANXP8KZG" });
 
+          console.log("LIFF初期化成功");
+
           if (liff.isLoggedIn()) {
+            console.log("LINEログイン済みです");
             const profile = await liff.getProfile();
+            console.log("プロファイル取得成功:", profile);
             setLineProfile(profile);
           } else {
-            // 未ログインの場合はLIFFログイン画面にリダイレクト
+            console.log("LINE未ログインのため、ログイン画面にリダイレクト");
             liff.login();
+            return; // ログイン中は処理を終了
           }
         } else {
           // LIFFが利用できない場合（PCブラウザアクセスなど）
-          console.log("LIFFが利用できません。PCブラウザアクセスです。");
-          // PCアクセスの場合はダミーのプロファイルを設定
+          console.log("LIFF SDKが見つかりません。PCブラウザアクセスです。");
           setLineProfile({
             userId: "pc-user-" + Date.now(),
             displayName: "PCユーザー",
@@ -52,7 +62,6 @@ export default function Home() {
         }
       } catch (error) {
         console.error("LIFF初期化エラー:", error);
-        // エラーの場合もPCアクセスとして処理
         setLineProfile({
           userId: "pc-user-" + Date.now(),
           displayName: "PCユーザー",
