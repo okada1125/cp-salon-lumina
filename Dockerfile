@@ -8,6 +8,7 @@ WORKDIR /app
 
 # パッケージファイルをコピーして依存関係をインストール（全依存関係）
 COPY package*.json ./
+COPY prisma ./prisma
 RUN npm ci
 
 # ビルドステージ
