@@ -22,7 +22,7 @@ steps:
     args:
       - "run"
       - "deploy"
-      - "line-contact-form"
+      - "cp-salon-lumina"
       - "--image"
       - "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:$COMMIT_SHA"
       - "--region"
