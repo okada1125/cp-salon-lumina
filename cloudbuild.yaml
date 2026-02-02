@@ -12,10 +12,9 @@ steps:
 
   # Push the container image to Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args:
-      - "push"
-      - "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:$COMMIT_SHA"
-      - "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:latest"
+    args: ["push", "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:$COMMIT_SHA"]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:latest"]
 
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
