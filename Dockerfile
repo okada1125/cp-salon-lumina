@@ -32,8 +32,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# mysql2 をコピー
-COPY --from=builder /app/node_modules ./node_modules
+# standalone の node_modules を壊さず、必要なパッケージのみ追加
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/mysql2 ./node_modules/mysql2
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@paralleldrive ./node_modules/@paralleldrive
 
 USER nextjs
 
