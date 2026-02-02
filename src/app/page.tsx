@@ -37,20 +37,34 @@ export default function Home() {
 
           console.log("LIFF SDKが見つかりました。初期化を開始します...");
 
-          // LIFFを初期化
-          await liff.init({ liffId: "2008317301-ANXP8KZG" });
-
-          console.log("LIFF初期化成功");
-
-          if (liff.isLoggedIn()) {
-            console.log("LINEログイン済みです");
-            const profile = await liff.getProfile();
-            console.log("プロファイル取得成功:", profile);
-            setLineProfile(profile);
+          // localhost の場合は LINE ログインをスキップ（LIFF は Cloud Run URL にリダイレクトするため）
+          const isLocalhost =
+            typeof window !== "undefined" &&
+            /^https?:\/\/localhost(:\d+)?(\/|$)/.test(
+              window.location.origin
+            );
+          if (isLocalhost) {
+            console.log("localhost のため、モックプロファイルで表示");
+            setLineProfile({
+              userId: "local-dev-" + Date.now(),
+              displayName: "ローカル確認用",
+            });
           } else {
-            console.log("LINE未ログインのため、ログイン画面にリダイレクト");
-            liff.login();
-            return; // ログイン中は処理を終了
+            // LIFFを初期化
+            await liff.init({ liffId: "2008317301-ANXP8KZG" });
+
+            console.log("LIFF初期化成功");
+
+            if (liff.isLoggedIn()) {
+              console.log("LINEログイン済みです");
+              const profile = await liff.getProfile();
+              console.log("プロファイル取得成功:", profile);
+              setLineProfile(profile);
+            } else {
+              console.log("LINE未ログインのため、ログイン画面にリダイレクト");
+              liff.login();
+              return; // ログイン中は処理を終了
+            }
           }
         } else {
           // LIFFが利用できない場合（PCブラウザアクセスなど）
