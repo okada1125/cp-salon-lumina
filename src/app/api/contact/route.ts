@@ -1,4 +1,4 @@
-import { createId } from "cuid2";
+import { createId } from "@paralleldrive/cuid2";
 import { NextRequest, NextResponse } from "next/server";
 import { executeQuery } from "@/lib/db";
 import { sendRegistrationMessage } from "@/lib/line-messaging";
