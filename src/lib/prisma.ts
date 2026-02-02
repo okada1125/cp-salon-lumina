@@ -2,18 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 function getDatabaseUrl(): string {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
-  if (process.env.DB_HOST || process.env.INSTANCE_CONNECTION_NAME) {
+  if (process.env.DB_HOST || process.env.DB_USERNAME) {
     const user = process.env.DB_USERNAME ?? "";
     const password = encodeURIComponent(process.env.DB_PASSWORD ?? "");
     const database = process.env.DB_DATABASE ?? "";
-
-    // Cloud Run + Cloud SQL: Unixソケット接続（推奨）
-    if (process.env.INSTANCE_CONNECTION_NAME) {
-      const instance = process.env.INSTANCE_CONNECTION_NAME.trim();
-      return `mysql://${user}:${password}@localhost/${database}?socketPath=/cloudsql/${instance}`;
-    }
-
-    // TCP接続（127.0.0.1:3306 等）
+    // Cloud Run + Cloud SQL: TCP接続（Cloud SQL Proxy が 127.0.0.1:3306 で待機）
     const host = process.env.DB_HOST ?? "127.0.0.1";
     const port = process.env.DB_PORT ?? "3306";
     return `mysql://${user}:${password}@${host}:${port}/${database}`;
