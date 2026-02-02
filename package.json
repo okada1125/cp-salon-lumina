@@ -9,7 +9,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migration:run": "echo 'No migrations (mysql2 - table exists)'"
   },
   "dependencies": {
     "@line/bot-sdk": "^10.3.0",
