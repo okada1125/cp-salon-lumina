@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     // データベースに保存
     console.log("データベースに保存を開始します...");
-    const id = createId(); // Prisma の cuid() と互換の形式
+    const id = createId();
     await executeQuery(
       `INSERT INTO contacts (id, kanjiName, katakanaName, phoneNumber, referrer, lineUserId, createdAt, updatedAt)
        VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,

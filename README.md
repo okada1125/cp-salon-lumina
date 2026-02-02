@@ -6,7 +6,7 @@ LINE LIFF アプリを使用した登録フォームです。LINE公式アカウ
 
 - LINE ログイン連携（LIFF）
 - ユーザー登録フォーム（名前（漢字）、ナマエ（カタカナ）、電話番号、紹介者（任意））
-- データベースへの保存（MySQL + Prisma）
+- データベースへの保存（MySQL + mysql2）
 - 登録完了後の LINE 自動メッセージ送信
 - Cloud Run への自動デプロイ
 
@@ -14,8 +14,7 @@ LINE LIFF アプリを使用した登録フォームです。LINE公式アカウ
 
 - Next.js 15
 - TypeScript
-- Prisma
-- MySQL
+- MySQL (mysql2)
 - Tailwind CSS
 - LINE LIFF SDK
 - LINE Messaging API
@@ -34,8 +33,12 @@ npm install
 `.env.local` ファイルを作成し、以下を設定してください：
 
 ```env
-# Database
-DATABASE_URL="mysql://user:password@host:3306/database"
+# Database (scraping-tool と同じ設定)
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=range
+DB_PASSWORD=your_password
+DB_DATABASE=salon_lumina_register
 
 # LINE Messaging API
 LINE_CHANNEL_ACCESS_TOKEN="your_channel_access_token_here"
@@ -45,14 +48,7 @@ LINE_CHANNEL_SECRET="your_channel_secret"
 LIFF_ID="your_liff_id"
 ```
 
-### 3. データベースの初期化
-
-```bash
-npx prisma db push
-npx prisma generate
-```
-
-### 4. 開発サーバーの起動
+### 3. 開発サーバーの起動
 
 ```bash
 npm run dev
@@ -81,7 +77,11 @@ npm run dev
 必要な環境変数：
 
 ```env
-DATABASE_URL="mysql://user:password@host:3306/database"
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USERNAME=range
+DB_PASSWORD=your_password
+DB_DATABASE=salon_lumina_register
 LINE_CHANNEL_ACCESS_TOKEN="your_channel_access_token"
 LINE_CHANNEL_SECRET="your_channel_secret"
 LIFF_ID="your_liff_id"
@@ -116,15 +116,12 @@ src/
 │   └── ContactForm.tsx         # フォームコンポーネント
 ├── lib/
 │   ├── line-messaging.ts      # LINE Messaging API
-│   └── prisma.ts              # Prismaクライアント
+│   └── db.ts                  # DB接続 (mysql2)
 └── types/
     └── liff.d.ts              # LIFF型定義
 
 public/
 └── liff.html                  # LIFFアプリページ
-
-prisma/
-└── schema.prisma              # データベーススキーマ
 
 cloudbuild.yaml                 # Cloud Build設定
 Dockerfile                      # コンテナイメージ設定
@@ -134,8 +131,7 @@ Dockerfile                      # コンテナイメージ設定
 
 - Next.js 15
 - TypeScript
-- Prisma
-- MySQL
+- MySQL (mysql2)
 - Tailwind CSS
 - LINE LIFF SDK
 - Google Cloud Run
