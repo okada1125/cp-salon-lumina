@@ -17,9 +17,9 @@
 
 ### ステップ2: 基本設定
 
-**名前**: `line-contact-form-deploy`
+**名前**: `cp-salon-lumina-deploy`
 
-**説明**: LINE Contact Form auto deploy from GitHub
+**説明**: cp-salon-lumina auto deploy from GitHub
 
 ### ステップ3: イベント設定
 
@@ -56,7 +56,7 @@
 ### 1. トリガーの確認
 
 - Cloud Build → トリガー を開く
-- `line-contact-form-deploy` が表示されているか確認
+- `cp-salon-lumina-deploy` が表示されているか確認
 
 ### 2. 自動デプロイのテスト
 
@@ -79,7 +79,7 @@ git push origin main
 ### 4. Cloud Runサービスの確認
 
 1. **Cloud Run → サービス** を開く
-2. `line-contact-form` サービスが作成されているか確認
+2. `cp-salon-lumina` サービスが作成されているか確認
 3. デプロイタイプが「ソース」になっているか確認
 4. URLが表示されているか確認
 
@@ -87,9 +87,9 @@ git push origin main
 
 以下の条件が満たされていれば成功です：
 
-✅ Cloud Build → トリガーに `line-contact-form-deploy` が表示される  
+✅ Cloud Build → トリガーに `cp-salon-lumina-deploy` が表示される  
 ✅ Cloud Build → 履歴にビルドが表示される（自動的に開始される）  
-✅ Cloud Run → サービスに `line-contact-form` が表示される  
+✅ Cloud Run → サービスに `cp-salon-lumina` が表示される  
 ✅ デプロイタイプが「ソース」として表示される（`line-register-app`と同じ）  
 ✅ サービスURLが表示されている  
 
