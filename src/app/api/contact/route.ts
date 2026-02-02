@@ -1,5 +1,6 @@
+import { createId } from "cuid2";
 import { NextRequest, NextResponse } from "next/server";
-import { getPrisma } from "@/lib/prisma";
+import { executeQuery } from "@/lib/db";
 import { sendRegistrationMessage } from "@/lib/line-messaging";
 
 interface ContactRequest {
@@ -32,16 +33,30 @@ export async function POST(request: NextRequest) {
 
     // データベースに保存
     console.log("データベースに保存を開始します...");
-    const prisma = await getPrisma();
-    const contactData = await prisma.contact.create({
-      data: {
-        kanjiName: body.kanjiName,
-        katakanaName: body.katakanaName,
-        phoneNumber: body.phoneNumber,
-        referrer: body.referrer || null,
-        lineUserId: body.lineUserId,
-      },
-    });
+    const id = createId(); // Prisma の cuid() と互換の形式
+    await executeQuery(
+      `INSERT INTO contacts (id, kanjiName, katakanaName, phoneNumber, referrer, lineUserId, createdAt, updatedAt)
+       VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+      [
+        id,
+        body.kanjiName,
+        body.katakanaName,
+        body.phoneNumber,
+        body.referrer || null,
+        body.lineUserId,
+      ]
+    );
+
+    const contactData = {
+      id,
+      kanjiName: body.kanjiName,
+      katakanaName: body.katakanaName,
+      phoneNumber: body.phoneNumber,
+      referrer: body.referrer || null,
+      lineUserId: body.lineUserId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
     console.log("新しいお問い合わせ保存成功:", contactData);
 

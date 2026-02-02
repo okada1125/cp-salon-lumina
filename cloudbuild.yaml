@@ -32,10 +32,8 @@ steps:
       - "--allow-unauthenticated"
       - "--add-cloudsql-instances"
       - "mystic-benefit-467802-s9:asia-northeast1:shieikai-backup2"
-      - "--set-secrets"
-      - "DATABASE_URL=DATABASE_URL:latest"
       - "--update-env-vars"
-      - "LINE_CHANNEL_SECRET=9239b0c9a368bbc48b4c6601201a00aa,LIFF_ID=2008317301-ANXP8KZG,LINE_CHANNEL_ACCESS_TOKEN=9239b0c9a368bbc48b4c6601201a00aa"
+      - "DB_HOST=127.0.0.1,DB_PORT=3306,DB_DATABASE=salon_lumina_register,DB_USERNAME=range,INSTANCE_CONNECTION_NAME=mystic-benefit-467802-s9:asia-northeast1:shieikai-backup2,LINE_CHANNEL_SECRET=9239b0c9a368bbc48b4c6601201a00aa,LIFF_ID=2008317301-ANXP8KZG,LINE_CHANNEL_ACCESS_TOKEN=9239b0c9a368bbc48b4c6601201a00aa"
 
 images:
   - "asia-northeast1-docker.pkg.dev/mystic-benefit-467802-s9/cp-salon-lumina/cp-salon-lumina-app:$COMMIT_SHA"
