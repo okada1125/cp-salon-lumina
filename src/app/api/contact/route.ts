@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { sendRegistrationMessage } from "@/lib/line-messaging";
 
 interface ContactRequest {
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
 
     // データベースに保存
     console.log("データベースに保存を開始します...");
+    const prisma = await getPrisma();
     const contactData = await prisma.contact.create({
       data: {
         kanjiName: body.kanjiName,
