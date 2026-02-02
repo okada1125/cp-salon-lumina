@@ -8,6 +8,8 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci
+RUN rm -rf node_modules/.prisma node_modules/@prisma 2>/dev/null || true
+RUN test ! -d node_modules/@prisma || (echo "ERROR: Prisma found - remove from package.json" && exit 1)
 
 # ビルドステージ
 FROM base AS builder
