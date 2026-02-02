@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from ".prisma/client";
 
 function getDatabaseUrl(): string {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
@@ -15,12 +15,18 @@ function getDatabaseUrl(): string {
   return "mysql://localhost:3306/placeholder";
 }
 
+// Prisma が schema の env("DATABASE_URL") を検証するため、事前に設定する
+const databaseUrl = getDatabaseUrl();
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = databaseUrl;
+}
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  datasources: { db: { url: getDatabaseUrl() } },
+  datasources: { db: { url: databaseUrl } },
   log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
 });
 
