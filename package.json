@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "migration:run": "prisma db push"
   },
   "dependencies": {
     "@line/bot-sdk": "^10.3.0",
