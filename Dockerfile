@@ -28,10 +28,8 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# 公式 Next.js Docker 構成: public / standalone / static を個別にコピー
-COPY --from=builder /app/public ./public
+# postbuild で public/static を埋め込んだ standalone をそのままコピー
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # standalone の node_modules を壊さず、必要なパッケージのみ追加
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/mysql2 ./node_modules/mysql2
