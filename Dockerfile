@@ -18,6 +18,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN npm run build
+# standalone に public と static をコピー（必須）
+RUN cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
 
 # 本番ステージ
 FROM base AS runner
@@ -28,9 +30,7 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # standalone の node_modules を壊さず、必要なパッケージのみ追加
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/mysql2 ./node_modules/mysql2
